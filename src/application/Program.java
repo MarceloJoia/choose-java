@@ -1,20 +1,12 @@
 package application;
 
-import java.util.Locale;
-import java.util.Scanner;
-
-import boardgame.Position;
+import boardgame.Board;
 
 public class Program {
 
 	public static void main(String[] args) {
-		Locale.setDefault(Locale.US);
-		Scanner sc = new Scanner(System.in);
 		
-		Position pos = new Position(1, 5);
+		Board board = new Board(8, 8);
 		
-		System.out.println(pos);
-		
-		sc.close();
 	}
 }
