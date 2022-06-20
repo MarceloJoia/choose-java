@@ -13,7 +13,7 @@ public class ChessPosition {
 		this.column = column;
 		this.row = row;
 	}
-
+	
 	public char getColumn() {
 		return column;
 	}

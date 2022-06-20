@@ -24,41 +24,41 @@ public class Bishop extends ChessPiece {
 
 		// NW
 		p.setValues(position.getRow() - 1, position.getCollumn() - 1);
-		while (getBoard().positionExistis(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 			p.setValues(p.getRow() - 1, p.getCollumn() - 1);
 		}
-		if (getBoard().positionExistis(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 		}
 
 		// NE
 		p.setValues(position.getRow() - 1, position.getCollumn() + 1);
-		while (getBoard().positionExistis(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 			p.setValues(p.getRow() - 1, p.getCollumn() + 1);
 		}
-		if (getBoard().positionExistis(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 		}
 
 		// SE
 		p.setValues(position.getRow() + 1, position.getCollumn() + 1);
-		while (getBoard().positionExistis(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 			p.setValues(p.getRow() + 1, p.getCollumn() + 1);
 		}
-		if (getBoard().positionExistis(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 		}
 
 		// SW
 		p.setValues(position.getRow() + 1, position.getCollumn() - 1);
-		while (getBoard().positionExistis(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 			p.setValues(p.getRow() + 1, p.getCollumn() - 1);
 		}
-		if (getBoard().positionExistis(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getCollumn()] = true;
 		}
 
