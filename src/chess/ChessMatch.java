@@ -89,8 +89,9 @@ public class ChessMatch {
 	}
 
 	private Piece makeMove(Position source, Position target) {
-		ChessPiece p = (ChessPiece) board.removePiece(source);
-		p.increasiMoveCount();
+		
+		ChessPiece p = (ChessPiece) board.removePiece(source);//Mover a peça P
+		p.increaseMoveCount();
 		Piece capturePiece = board.removePiece(target);
 		board.placePiece(p, target);
 
@@ -98,18 +99,85 @@ public class ChessMatch {
 			piecesOnTheBoard.remove(capturePiece);
 			capturedPieces.add(capturePiece);
 		}
+		
+		// ------------------------------------------------------------------ //
+		// ----------------------- # ROQUE PEQUENO # ------------------------ //
+		// ------------------------------***--------------------------------- //
+		// ------- MOVIMENTO ESPECIAL ROQUE NA TORRE DO ALA DO REI ---------- //
+		/**
+		 * [p instanceof King] - SE O P FOR UMA INSTANCIA DE REI
+		 * [target.getCollumn()] - E SE O ALVO(TAGET) FOR IGUAU A 
+		 * [source.getCollumn() + 2] - A FONTE(SOURCE) MAIS 2
+		 * SIGNIFICA QUE O REI ANDOU 2 CASAS PARA A DIREITA.
+		 			*** -- FOI UM ROQUE PEQUENO -- ***
+		 *//***************** MOVER A TORRE NO ROQUE PEQUENO ******************/
+		if(p instanceof King && target.getCollumn() == source.getCollumn() + 2) {
+			//PEGAR A POSIÇÃO DE ORIGEM DA [TORRE] --> FONTE(source) <--
+			Position sourceT = new Position(source.getRow(), source.getCollumn() + 3);
+			//MOVER A TORRE, [1 COLUNA] A DIREITA DO REI --> ALVO(target) <--
+			Position targetT = new Position(source.getRow(), source.getCollumn() + 1);
+			//RETIRAR A [TORRE] DE SUA POSIÇÃO.
+			ChessPiece rook = (ChessPiece)board.removePiece(sourceT);
+			//COLOCAR A TORRE NA [NOVA POSIÇÃO]
+			board.placePiece(rook, targetT);
+			//MOVI A [TORRE], VOU INCREMENTAR A QUANTIDADE DE MOVIMENTO DELA.
+			rook.increaseMoveCount();
+		}
+		
+		//******************* MOVER A TORRE NO ROQUE GRANDE ********************//
+		if(p instanceof King && target.getCollumn() == source.getCollumn() - 2) {
+			//PEGAR A POSIÇÃO DE ORIGEM DA [TORRE] --> FONTE(source) <--
+			Position sourceT = new Position(source.getRow(), source.getCollumn() - 4);
+			//MOVER A TORRE, [1 COLUNA] A DIREITA DO REI --> ALVO(target) <--
+			Position targetT = new Position(source.getRow(), source.getCollumn() - 1);
+			//RETIRAR A [TORRE] DE SUA POSIÇÃO.
+			ChessPiece rook = (ChessPiece)board.removePiece(sourceT);
+			//COLOCAR A TORRE NA [NOVA POSIÇÃO]
+			board.placePiece(rook, targetT);
+			//MOVI A [TORRE], VOU INCREMENTAR A QUANTIDADE DE MOVIMENTO DELA.
+			rook.increaseMoveCount();
+		}
+
 		return capturePiece;
 	}
 
 	private void undoMove(Position source, Position target, Piece capturedPiece) {
 		ChessPiece p = (ChessPiece) board.removePiece(target);
-		p.decreasiMoveCount();
+		p.decreaseMoveCount();
 		board.placePiece(p, source);
 
 		if (capturedPiece != null) {
 			board.placePiece(capturedPiece, target);
 			capturedPieces.remove(capturedPiece);
 			piecesOnTheBoard.add(capturedPiece);
+		}
+		
+		//************* DESFAZER O MOVER A TORRE NO ROQUE PEQUENO *************//
+		if(p instanceof King && target.getCollumn() == source.getCollumn() + 2) {
+			//PEGAR A POSIÇÃO DE ORIGEM DA [TORRE] --> FONTE(source) <--
+			Position sourceT = new Position(source.getRow(), source.getCollumn() + 3);
+			//MOVER A TORRE, [1 COLUNA] A DIREITA DO REI --> ALVO(target) <--
+			Position targetT = new Position(source.getRow(), source.getCollumn() + 1);
+			//RETIRAR A [TORRE] DE SUA POSIÇÃO ATUAL [sourceT]
+			ChessPiece rook = (ChessPiece)board.removePiece(targetT);
+			//E DEVOLVO A TORRE NA POSIÇÃO DE ORIGEM [sourceT]
+			board.placePiece(rook, sourceT);
+			//DESFEITO O MOVIMENTO DA [TORRE], VOU DECREMENTAR A QUANTIDADE DE MOVIMENTOS DA TORRE.
+			rook.decreaseMoveCount();
+		}
+		
+		//************** DESFAZER O MOVER A TORRE NO ROQUE GRANDE ***************//
+		if(p instanceof King && target.getCollumn() == source.getCollumn() - 2) {
+			//PEGAR A POSIÇÃO DE ORIGEM DA [TORRE] --> FONTE(source) <--
+			Position sourceT = new Position(source.getRow(), source.getCollumn() - 4);
+			//MOVER A TORRE, [1 COLUNA] A DIREITA DO REI --> ALVO(target) <--
+			Position targetT = new Position(source.getRow(), source.getCollumn() - 1);
+			//RETIRAR A [TORRE] DE SUA POSIÇÃO ATUAL.
+			ChessPiece rook = (ChessPiece)board.removePiece(targetT);
+			//COLOCAR A TORRE NA [POSIÇÃO ANTERIOR]
+			board.placePiece(rook, sourceT);
+			//[DECREMENTAR] O MOVIMENTO DA [TORRE].
+			rook.decreaseMoveCount();
 		}
 	}
 
@@ -201,7 +269,7 @@ public class ChessMatch {
 		placeNewPiece('b', 1, new Knight(board, Color.WHITE));
 		placeNewPiece('c', 1, new Bishop(board, Color.WHITE));
 		placeNewPiece('d', 1, new Queen(board, Color.WHITE));
-		placeNewPiece('e', 1, new King(board, Color.WHITE));
+		placeNewPiece('e', 1, new King(board, Color.WHITE, this));
 		placeNewPiece('f', 1, new Bishop(board, Color.WHITE));
 		placeNewPiece('g', 1, new Knight(board, Color.WHITE));
 		placeNewPiece('h', 1, new Rook(board, Color.WHITE));
@@ -218,7 +286,7 @@ public class ChessMatch {
 		placeNewPiece('b', 8, new Knight(board, Color.BLACK));
 		placeNewPiece('c', 8, new Bishop(board, Color.BLACK));
 		placeNewPiece('d', 8, new Queen(board, Color.BLACK));
-		placeNewPiece('e', 8, new King(board, Color.BLACK));
+		placeNewPiece('e', 8, new King(board, Color.BLACK, this));
 		placeNewPiece('f', 8, new Bishop(board, Color.BLACK));
 		placeNewPiece('g', 8, new Knight(board, Color.BLACK));
 		placeNewPiece('h', 8, new Rook(board, Color.BLACK));
