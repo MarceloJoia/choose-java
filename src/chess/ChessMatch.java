@@ -8,11 +8,23 @@ import chess.pieces.Rook;
 
 public class ChessMatch {
 
+	private int turn;
+	private Color currentPlayer;
 	private Board board;
 
 	public ChessMatch() {
 		board = new Board(8, 8);
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		initialSetup();
+	}
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public Color getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	public ChessPiece[][] getPieces() {
@@ -32,9 +44,10 @@ public class ChessMatch {
 		validateSourcePosition(source);
 		ValidateTargetPosition(source, target);
 		Piece capturePiece = makeMove(source, target);
+		nextTurn();
 		return (ChessPiece) capturePiece;
 	}
-	
+
 	public boolean[][] PossibleMoves(ChessPosition sourcePosition) {
 		Position position = sourcePosition.toPisition();
 		validateSourcePosition(position);
@@ -45,7 +58,7 @@ public class ChessMatch {
 		Piece p = board.removePiece(source);
 		Piece capturePiece = board.removePiece(target);
 		board.placePiece(p, target);
-		
+
 		return capturePiece;
 	}
 
@@ -53,16 +66,23 @@ public class ChessMatch {
 		if (!board.thereIsApiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		}
-		//Existe movimento possível para a peça?
-		if(!board.piece(position).isThereAnyPossibleMove()) {
+		if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
+			throw new ChessException("The chosen piece is not yours");
+		}
+		if (!board.piece(position).isThereAnyPossibleMove()) {
 			throw new ChessException("There is no possible moves for the chosen piece");
 		}
 	}
-	
+
 	private void ValidateTargetPosition(Position source, Position target) {
-		if(!board.piece(source).possibleMove(target)) {
+		if (!board.piece(source).possibleMove(target)) {
 			throw new ChessException("The chosen piece can't move to target position");
 		}
+	}
+
+	private void nextTurn() {
+		turn++;
+		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
 	}
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
@@ -84,4 +104,5 @@ public class ChessMatch {
 		placeNewPiece('e', 8, new Rook(board, Color.BLACK));
 		placeNewPiece('d', 8, new King(board, Color.BLACK));
 	}
+
 }

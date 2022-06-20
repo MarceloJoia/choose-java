@@ -17,8 +17,8 @@ public class Program {
 
 		while (true) {
 			try {
-				UI.clearScreen();// Limpa a tela CMD
-				UI.printBoard(chessMatch.getPieces());
+				UI.clearScreen();
+				UI.printMatch(chessMatch);
 				System.out.println();
 				System.out.print("Source: ");
 				ChessPosition source = UI.readChessPosition(sc);
@@ -34,10 +34,10 @@ public class Program {
 				ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
-				sc.nextLine();// Aguarda precionar o Enter
+				sc.nextLine();
 			} catch (InputMismatchException e) {
 				System.out.println(e.getMessage());
-				sc.nextLine();// Aguarda precionar o Enter
+				sc.nextLine();
 			}
 		}
 	}
