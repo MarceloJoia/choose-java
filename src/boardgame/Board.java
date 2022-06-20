@@ -68,8 +68,8 @@ public class Board {
 
 	public boolean thereIsApiece(Position position) {
 		/*
-		 * if(thereIsApiece(position)) { throw new
-		 * BoardException("There is already a piece on position"); }
+		 if(thereIsApiece(position)) { throw new
+		  BoardException("There is already a piece on position"); }
 		 */
 		return piece(position) != null;
 	}
