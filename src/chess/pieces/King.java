@@ -9,7 +9,7 @@ import chess.Color;
 public class King extends ChessPiece {
 
 	private ChessMatch chessMatch;
-
+	
 	public King(Board board, Color color, ChessMatch chessMatch) {
 		super(board, color);
 		this.chessMatch = chessMatch;
@@ -21,117 +21,87 @@ public class King extends ChessPiece {
 	}
 
 	private boolean canMove(Position position) {
-		ChessPiece p = (ChessPiece) getBoard().piece(position);
+		ChessPiece p = (ChessPiece)getBoard().piece(position);
 		return p == null || p.getColor() != getColor();
 	}
-
+	
 	private boolean testRookCastling(Position position) {
-		// Pego uma posição p
-		ChessPiece p = (ChessPiece) getBoard().piece(position);
-		/*
-		 * [p != null] Vejo se a posição está vazia?
-		 * [p instanceof Rook] Se é uma torre?
-		 * [p.getColor() == getColor()] Se a cor é a mesma?
-		 * [p.getMoveCount() == 0] Se a torre ainda não movimentou-se?
-		 */
+		ChessPiece p = (ChessPiece)getBoard().piece(position);
 		return p != null && p instanceof Rook && p.getColor() == getColor() && p.getMoveCount() == 0;
 	}
-
+	
 	@Override
 	public boolean[][] possibleMoves() {
 		boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
-
+		
 		Position p = new Position(0, 0);
-
-		// Above
+		
+		// above
 		p.setValues(position.getRow() - 1, position.getColumn());
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Below
+		// below
 		p.setValues(position.getRow() + 1, position.getColumn());
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Left
+		// left
 		p.setValues(position.getRow(), position.getColumn() - 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Right
+		// right
 		p.setValues(position.getRow(), position.getColumn() + 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// NW
+		// nw
 		p.setValues(position.getRow() - 1, position.getColumn() - 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// NE
+		// ne
 		p.setValues(position.getRow() - 1, position.getColumn() + 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// SW
+		// sw
 		p.setValues(position.getRow() + 1, position.getColumn() - 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
-
-		// SE
+		
+		// se
 		p.setValues(position.getRow() + 1, position.getColumn() + 1);
 		if (getBoard().positionExists(p) && canMove(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
-		
-		// #Movimento especial - Torre
-		/*
-		 * [getMoveCount()== 0] - Ver se o REI foi movimentado.
-		 * [!chessMatch.getCheck()] - Ver se o REI está em Cheke.
-		 */
-		if(getMoveCount()== 0 && !chessMatch.getCheck()) {
-			/* #Roque pequeno
-			 * [Position(position.getRow(), position.getColumn() + 3)] - Pego a posição onde deve estár a torre do REI.
-			*/
+
+		// #specialmove castling
+		if (getMoveCount() == 0 && !chessMatch.getCheck()) {
+			// #specialmove castling kingside rook
 			Position posT1 = new Position(position.getRow(), position.getColumn() + 3);
-			/*
-			 * [testRookCastling(posT1)] - Testar se existe uma TORRE apta para ROQUE.
-			 */
-			if(testRookCastling(posT1)) {
-				/* Testar se as 2 casar estão vazias
-				 * [Position(position.getRow(), position.getColumn() + 1)] - Ver se casa da DIREITA do REI está vazia?
-				 * p2 vê se a segunda casa da direita está vazia.
-				 */
+			if (testRookCastling(posT1)) {
 				Position p1 = new Position(position.getRow(), position.getColumn() + 1);
 				Position p2 = new Position(position.getRow(), position.getColumn() + 2);
-				/*
-				 * #[getBoard().piece(p2) == null] - Ver se a PRIMEIRA posição está vazia
-				 * #[getBoard().piece(p2) == null] - Ver se a SEGUNDA posição está vazia
-				 */
-				if(getBoard().piece(p2) == null && getBoard().piece(p2) == null) {
-					/* Incluir na matriz como possível movimento.
-					 * [ [position.getRow()] ] - Linha do REI
-					 * [ [position.getColumn() + 2] ] - Coluna do REI
-					 */
+				if (getBoard().piece(p1) == null && getBoard().piece(p2) == null) {
 					mat[position.getRow()][position.getColumn() + 2] = true;
 				}
 			}
-			
-			// ROQUE Grande
+			// #specialmove castling queenside rook
 			Position posT2 = new Position(position.getRow(), position.getColumn() - 4);
-
-			if(testRookCastling(posT2)) {
+			if (testRookCastling(posT2)) {
 				Position p1 = new Position(position.getRow(), position.getColumn() - 1);
 				Position p2 = new Position(position.getRow(), position.getColumn() - 2);
 				Position p3 = new Position(position.getRow(), position.getColumn() - 3);
-				if(getBoard().piece(p2) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null) {
+				if (getBoard().piece(p1) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null) {
 					mat[position.getRow()][position.getColumn() - 2] = true;
 				}
 			}

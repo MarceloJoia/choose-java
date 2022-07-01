@@ -1,5 +1,3 @@
-
-
 package chess.pieces;
 
 import boardgame.Board;
@@ -24,43 +22,43 @@ public class Rook extends ChessPiece {
 
 		Position p = new Position(0, 0);
 
-		// Above
+		// above
 		p.setValues(position.getRow() - 1, position.getColumn());
-		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 			p.setRow(p.getRow() - 1);
 		}
-		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Left
+		// left
 		p.setValues(position.getRow(), position.getColumn() - 1);
-		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 			p.setColumn(p.getColumn() - 1);
 		}
-		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Right
+		// right
 		p.setValues(position.getRow(), position.getColumn() + 1);
-		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 			p.setColumn(p.getColumn() + 1);
 		}
-		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
-		// Below
+		// below
 		p.setValues(position.getRow() + 1, position.getColumn());
-		while (getBoard().positionExists(p) && !getBoard().thereIsApiece(p)) {
+		while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 			p.setRow(p.getRow() + 1);
 		}
-		if (getBoard().positionExists(p) && IsThereOpponentPiece(p)) {
+		if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 			mat[p.getRow()][p.getColumn()] = true;
 		}
 
